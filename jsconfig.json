@@ -1,6 +1,11 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "checkJs": false
-  }
+    "checkJs": false,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["src/**/*.js"]
 }
