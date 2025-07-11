@@ -25,34 +25,142 @@ const parseCSV = (csvText) => {
 
 // --- Modal Component for AI Insights ---
 const InsightsModal = ({ isOpen, onClose, isLoading, error, content }) => {
+    // Güvenli bir şekilde kullanıcı kontrolünü işleyebilmek için useEffect kullanıyoruz
+    React.useEffect(() => {
+        // Modal açıkken, sayfa kaydırmayı engelle
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Cleanup
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, [isOpen]);
+
     if (!isOpen) return null;
 
-    return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4">
-            <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
-                <div className="p-4 border-b flex justify-between items-center">
-                    <h2 className="text-xl font-bold text-gray-800">✨ AI-Powered Insights</h2>
-                    <button onClick={onClose} className="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
-                </div>
-                <div className="p-6 overflow-y-auto">
-                    {isLoading && (
-                        <div className="flex flex-col items-center justify-center h-48">
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-                            <p className="mt-4 text-gray-600">Generating insights...</p>
-                        </div>
-                    )}
-                    {error && <div className="text-red-600 bg-red-50 p-4 rounded-md">{error}</div>}
-                    {content && !isLoading && (
-                        <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: content.replace(/\n/g, '<br />') }}></div>
-                    )}
-                </div>
-                 <div className="p-4 border-t text-right">
-                    <button onClick={onClose} className="bg-indigo-600 text-white font-bold py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors">
-                        Close
-                    </button>
+    return (            <div style={{
+                position: 'fixed',
+                inset: 0,
+                backgroundColor: 'rgba(0,0,0,0.5)',
+                zIndex: 50,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '1rem'
+            }}>
+                <div style={{
+                    backgroundColor: 'white',
+                    borderRadius: '0.5rem',
+                    boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)',
+                    width: '100%',
+                    maxWidth: '42rem',
+                    maxHeight: '90vh',
+                    display: 'flex',
+                    flexDirection: 'column'
+                }}>
+                    <div style={{
+                        padding: '1rem',
+                        borderBottom: '1px solid #e5e7eb',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}>
+                        <h2 style={{
+                            fontSize: '1.25rem',
+                            fontWeight: 'bold',
+                            color: '#1f2937'
+                        }}>✨ AI-Powered Insights</h2>
+                        <button 
+                            onClick={onClose} 
+                            style={{
+                                color: '#6b7280',
+                                fontSize: '1.5rem',
+                                cursor: 'pointer',
+                                background: 'none',
+                                border: 'none'
+                            }}
+                            aria-label="Close modal"
+                        >
+                            &times;
+                        </button>
+                    </div>
+                    <div style={{
+                        padding: '1.5rem',
+                        overflowY: 'auto'
+                    }}>
+                        {isLoading && (
+                            <div style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                height: '12rem'
+                            }}>
+                                <div style={{
+                                    animation: 'spin 1s linear infinite',
+                                    borderRadius: '9999px',
+                                    height: '3rem',
+                                    width: '3rem',
+                                    borderWidth: '2px',
+                                    borderStyle: 'solid',
+                                    borderColor: 'transparent',
+                                    borderBottomColor: '#4f46e5'
+                                }}></div>
+                                <p style={{
+                                    marginTop: '1rem',
+                                    color: '#4b5563'
+                                }}>Generating insights...</p>
+                            </div>
+                        )}
+                        {error && (
+                            <div style={{
+                                color: '#dc2626',
+                                backgroundColor: '#fef2f2',
+                                padding: '1rem',
+                                borderRadius: '0.375rem'
+                            }}>
+                                {error}
+                            </div>
+                        )}
+                        {content && !isLoading && (
+                            <div style={{
+                                maxWidth: 'none'
+                            }}>
+                                {content.split('\n').map((line, index) => (
+                                    <React.Fragment key={index}>
+                                        {line}
+                                        {index < content.split('\n').length - 1 && <br />}
+                                    </React.Fragment>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                    <div style={{
+                        padding: '1rem',
+                        borderTop: '1px solid #e5e7eb',
+                        textAlign: 'right'
+                    }}>
+                        <button 
+                            onClick={onClose} 
+                            style={{
+                                backgroundColor: '#4f46e5',
+                                color: 'white',
+                                fontWeight: 'bold',
+                                padding: '0.5rem 1rem',
+                                borderRadius: '0.375rem',
+                                cursor: 'pointer',
+                                border: 'none'
+                            }}
+                        >
+                            Close
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
     );
 };
 
